@@ -1,0 +1,107 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark px-3" style="background-color: #005F83;">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/dashboard">
+      <img routerLink="/home" src="assets/logo.png" alt="Logo" style="height: 55px; width: auto; border-radius: 8px;" class="d-inline-block align-text-top">
+    </a>
+  
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard">Account</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/add">Add Donation</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/view">View Donation</a>
+        </li>
+      </ul>
+  
+      <div class="d-lg-flex text-white align-items-center">
+        <span class="me-2">Hello, {{ userName }}</span>
+        <a routerLink="/login" class="btn btn-danger text-decoration-none" (click)="logout()">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid mt-4">
+    <h4 class="text-center fw-bold">Add Donation</h4>
+    <div class="horizontal-line"></div>
+  
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-3 mb-4">
+        <div class="sidebar">
+          <h5>Total Balance</h5>
+          <h3>₹{{ dafBalance }}</h3>
+        </div>
+  
+        <div class="section-box">
+          <h6>Total Donation</h6>
+          <h4>₹{{ totalDonated }}</h4>
+        </div>
+  
+        <div class="section-box">
+          <h6>Charities Donated to:</h6>
+          <span *ngIf="donatedCharities.length!==0; else nodata">
+            <ol>
+              <li *ngFor="let charity of donatedCharities">{{ charity.name }}</li>
+            </ol>
+          </span>
+          <ng-template #nodata>
+            <p>No charities donated to yet.</p>
+          </ng-template>
+        </div>
+      </div>
+  
+      <!-- Donation Form -->
+      <!-- Search Bar -->
+<div class="col-md-9 position-relative">
+    <input
+      type="text"
+      class="search-bar mb-3"
+      [(ngModel)]="searchTerm"
+      placeholder="Search for charity"
+      (focus)="showCharityList = true"
+        (input)="filteredCharities"
+      (blur)="hideCharityList()"
+    />
+  
+    <!-- Charity List -->
+    <div class="charity-list-overlay" *ngIf="showCharityList">
+      <div
+        *ngFor="let charity of filteredCharities"
+        class="p-2 border rounded mb-2"
+        style="cursor:pointer;"
+        [class.bg-light]="selectedCharity?.charityId === charity.charityId"
+        (click)="selectCharity(charity)"
+      >
+        <strong>{{ charity.name }}</strong> - {{ charity.category }} ({{ charity.location }})
+      </div>
+    </div>
+    
+        <div class="form-section" *ngIf="selectedCharity">
+          <p><strong>Charity Selected:</strong> {{ selectedCharity.name }}</p>
+  
+          <label for="amount">Enter Amount:</label>
+          <input type="number" id="amount" class="form-control" [(ngModel)]="donationAmount" placeholder="Amount">
+  
+          <label for="desc" class="mt-2">Description / Purpose of Donation (Optional):</label>
+          <textarea id="desc" class="form-control" [(ngModel)]="donationDesc" rows="5"></textarea>
+  
+          <div class="form-check mt-3">
+            <input type="checkbox" class="form-check-input" id="terms" [(ngModel)]="agreedToTerms">
+            <label class="form-check-label" for="terms">I agree to all terms & conditions</label>
+          </div>
+  
+          <button class="btn btn-primary mt-3" (click)="donate()">Donate</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
